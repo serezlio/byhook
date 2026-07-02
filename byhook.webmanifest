@@ -1,0 +1,18 @@
+{
+  "name": "By Hook",
+  "short_name": "By Hook",
+  "description": "BIST VIOP Trading Dashboard",
+  "start_url": "./byhook.html",
+  "display": "standalone",
+  "background_color": "#04091a",
+  "theme_color": "#04091a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "byhook_icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
