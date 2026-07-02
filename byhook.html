@@ -1135,17 +1135,43 @@ function posCard(item, isRobot){
     ? `<div class="p-act"><button class="btn-kapat" data-id="${item.id}">Pozisyonu Kapat</button></div>`
     : `<div class="p-act"><span style="font-size:11px;color:var(--purple)">Robot pozisyonu — CERN gorevi kapatir</span></div>`;
 
+  // Robot: SL/TP bar göster
+  let slTpHtml = '';
+  if(isRobot && item.giris!=null && item.sl!=null && item.tp!=null){
+    const cur = MKT&&MKT.hisseler[item.sembol]?MKT.hisseler[item.sembol].fiyat:null;
+    const slDist = cur!=null?Math.abs(cur-item.sl).toFixed(2):null;
+    const tpDist = cur!=null?Math.abs(item.tp-cur).toFixed(2):null;
+    const rr = item.sl&&item.tp&&item.giris ? (Math.abs(item.tp-item.giris)/Math.abs(item.giris-item.sl)).toFixed(1) : null;
+    slTpHtml = `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:0 14px 8px">
+      <div style="text-align:center">
+        <div style="font-size:9px;color:var(--short);font-weight:700;text-transform:uppercase;letter-spacing:.5px">SL</div>
+        <div style="font-size:13px;font-weight:800;color:var(--short)">${tr(item.sl,2)}</div>
+        ${slDist?`<div style="font-size:9px;color:var(--text3)">${slDist} uzak</div>`:''}
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:9px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Giris</div>
+        <div style="font-size:13px;font-weight:800;color:var(--text)">${item.giris!=null?tr(item.giris,2):'—'}</div>
+        ${rr?`<div style="font-size:9px;color:var(--gold)">R/R 1:${rr}</div>`:''}
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:9px;color:var(--long);font-weight:700;text-transform:uppercase;letter-spacing:.5px">TP</div>
+        <div style="font-size:13px;font-weight:800;color:var(--long)">${tr(item.tp,2)}</div>
+        ${tpDist?`<div style="font-size:9px;color:var(--text3)">${tpDist} uzak</div>`:''}
+      </div>
+    </div>`;
+  }
+
   return `<div class="pcard ${cls}">
     <div class="p-top">
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${yTag}${sTag}${rTag}<span class="p-sym">${item.sembol}</span></div>
       <span style="font-size:10px;color:var(--text3)">${fD(item.giris_zaman)} ${fT(item.giris_zaman)}</span>
     </div>
-    <div class="p-grid">
+    ${isRobot ? slTpHtml : `<div class="p-grid">
       <div class="p-item"><label>Giris</label><span>${item.giris!=null?tr(item.giris,2):'—'}</span></div>
       <div class="p-item"><label>Kontrat</label><span>${item.kontrat}</span></div>
       <div class="p-item"><label>Carpan</label><span>${D.carpan}</span></div>
-    </div>
-    ${liveHtml}${puanHtml}${noteHtml}${actHtml}
+    </div>`}
+    ${!isRobot?liveHtml:''}${puanHtml}${noteHtml}${actHtml}
   </div>`;
 }
 
