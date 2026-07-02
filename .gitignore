@@ -1,4 +1,5 @@
 .env
+telegram_config.json
 *.log
 safety-check-log.json
 node_modules/
