@@ -1,0 +1,37 @@
+{
+  "acik_islemler": [
+    {
+      "id": 1,
+      "sembol": "GARAN",
+      "yon": "LONG",
+      "giris_fiyat": null,
+      "kontrat": null,
+      "giris_zaman": null,
+      "sistem": "manuel",
+      "not": "Kullanici giris bilgisi vermedi - tahmini entry ~141.15"
+    },
+    {
+      "id": 2,
+      "sembol": "KRDMD",
+      "yon": "LONG",
+      "giris_fiyat": 42.23,
+      "kontrat": 19,
+      "giris_zaman": null,
+      "sistem": "manuel",
+      "acik_pnl_tl": -606,
+      "not": "Zarar pozisyonu - streak kontrolu yapilmali"
+    }
+  ],
+  "kapali_islemler": [],
+  "istatistik": {
+    "toplam": 0,
+    "kazanc": 0,
+    "kayip": 0,
+    "kazanc_orani": 0,
+    "net_pnl_tl": 0
+  },
+  "streak": {
+    "ard_arda_kayip": 0,
+    "durum": "normal"
+  }
+}

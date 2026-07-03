@@ -1,0 +1,32 @@
+=== TEAMVIEWER DURUM KONTROLU === 
+ 
+[TeamViewer Servis Durumu] 
+
+SERVICE_NAME: TeamViewer 
+        TYPE               : 10  WIN32_OWN_PROCESS  
+        STATE              : 1  STOPPED 
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+ 
+[TeamViewer Baslangic Turu] 
+[SC] QueryServiceConfig SUCCESS
+
+SERVICE_NAME: TeamViewer
+        TYPE               : 10  WIN32_OWN_PROCESS 
+        START_TYPE         : 4   DISABLED
+        ERROR_CONTROL      : 1   NORMAL
+        BINARY_PATH_NAME   : "C:\Program Files\TeamViewer\TeamViewer_Service.exe"
+        LOAD_ORDER_GROUP   : 
+        TAG                : 0
+        DISPLAY_NAME       : TeamViewer
+        DEPENDENCIES       : RpcSs
+                           : Tcpip
+                           : NDIS
+                           : AFD
+        SERVICE_START_NAME : LocalSystem
+ 
+[Firewall TeamViewer Kurallari] 
+ 
+KONTROL TAMAMLANDI 

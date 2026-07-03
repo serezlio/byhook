@@ -1,0 +1,10 @@
+
+1214972542                      24-12-2025 20:27:16             24-12-2025 21:06:39             Administrator                   RemoteControl                   {4689efc2-eba8-4798-8189-89291f15873e}
+1214972542                      07-01-2026 18:56:04             07-01-2026 19:15:02             Administrator                   RemoteControl                   {8337fddd-bd80-46a4-99f0-35a71acf207a}
+1223388790                      24-01-2026 10:42:55             24-01-2026 13:32:02             Administrator                   RemoteControl                   {e61fd99e-db84-4ffc-9479-312b79718e41}
+1223388790                      11-02-2026 09:07:35             11-02-2026 10:28:24             Administrator                   RemoteControl                   {7cc267d5-c5ea-414d-bab9-ba7f76c69329}
+1223388790                      11-02-2026 11:41:25             11-02-2026 13:22:29             Administrator                   RemoteControl                   {70cf358c-c327-4aea-a6e8-15fe74cbeb84}
+210589262                       28-02-2026 19:04:14             28-02-2026 19:19:04             Administrator                   RemoteControl                   {d0d96b5f-89ed-4b6f-a618-0a1e20653030}
+1933926016                      25-04-2026 10:42:09             25-04-2026 10:48:22             Administrator                   RemoteControl                   {698b5bc8-3371-44b7-a882-878a31c7def3}
+1933926016                      25-04-2026 10:58:14             25-04-2026 10:58:50             Administrator                   RemoteControl                   {33817c57-c3e9-43c2-8387-92ddecaf23fb}
+1933926016                      25-04-2026 10:49:51             25-04-2026 10:59:57             Administrator                   RemoteControl                   {6771bce2-52bc-4519-b479-af4d98cd7ccb}

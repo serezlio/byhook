@@ -1,0 +1,5 @@
+{
+  "chat_id": "1021566586",
+  "parse_mode": "HTML",
+  "text": "⚡ <b>BY HOOK — {{strategy.order.action}} SİNYALİ</b>\n━━━━━━━━━━━━━━━━━━━━\n📌 Sembol  : <b>{{ticker}}</b>\n⏱ Zaman   : {{interval}}dk | {{time}}\n💲 Fiyat   : <b>{{close}}</b>\n📊 Açılış  : {{open}}\n🔺 Yüksek  : {{high}}\n🔻 Düşük   : {{low}}\n━━━━━━━━━━━━━━━━━━━━\n⚡ <i>Manuel emir ver — A1 Capital</i>"
+}
