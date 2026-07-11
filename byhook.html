@@ -67,6 +67,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .hdr-date{font-size:10px;color:var(--text3);margin-top:1px;font-weight:600}
 .robot-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--long);margin-right:4px;box-shadow:0 0 6px var(--long);animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.btn-refresh{background:rgba(56,189,248,.08);border:1px solid var(--border);color:var(--acc);width:44px;height:44px;border-radius:10px;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .1s,transform .1s;line-height:1;padding:0;touch-action:manipulation;-webkit-appearance:none;-webkit-user-select:none}
+.btn-refresh:active,.btn-refresh.pressed{background:rgba(56,189,248,.25);transform:scale(.9)}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.btn-refresh.spinning{animation:spin .5s linear}
 
 /* MAIN */
 main{padding:calc(var(--top-h)+12px) 14px calc(var(--tab-h)+12px);min-height:100dvh;position:relative;z-index:1}
@@ -289,6 +293,7 @@ main{padding:calc(var(--top-h)+12px) 14px calc(var(--tab-h)+12px);min-height:100
 
 <div class="topbar">
   <div class="logo">BY HOOK</div>
+  <button class="btn-refresh" id="btn-refresh" onclick="doRefresh()" title="Yenile">↻</button>
   <div class="hdr-r">
     <div class="hdr-kasa" id="hdr-kasa">—</div>
     <div class="hdr-date" id="hdr-date">—</div>
@@ -1674,6 +1679,36 @@ initBg();
 renderHeader();
 renderPanel();
 setInterval(renderHeader,60000);
+
+// ─── YENİLEME ──────────────────────────────────────────────────────────────
+function doRefresh(){
+  const btn=document.getElementById('btn-refresh');
+  if(btn){btn.classList.add('spinning','pressed');}
+  // Cache-busting: URL parametresi ekle, tarayici .js dosyalarini tekrar ceker
+  setTimeout(function(){
+    const sep=location.search?'&':'?';
+    location.href=location.pathname+'?v='+Date.now();
+  },250);
+}
+// Buton: touchstart = anlik gorsel, touchend = reload (iOS 300ms gecikmesiz)
+document.addEventListener('DOMContentLoaded',function(){
+  const btn=document.getElementById('btn-refresh');
+  if(!btn) return;
+  btn.addEventListener('touchstart',function(e){
+    e.preventDefault();
+    btn.classList.add('pressed','spinning');
+    setTimeout(function(){location.href=location.pathname+'?v='+Date.now();},200);
+  },{passive:false});
+});
+// Seans saatlerinde (Pzt-Cum 10:00-18:00 TR) her 5 dakikada otomatik yenile
+setInterval(function(){
+  const now=new Date();
+  const day=now.getDay();
+  const trMins=((now.getUTCHours()*60+now.getUTCMinutes())+180)%1440;
+  if(day>=1&&day<=5&&trMins>=600&&trMins<=1080){
+    location.href=location.pathname+'?v='+Date.now();
+  }
+},5*60*1000);
 
 // ─── EVENTS ────────────────────────────────────────────────────────────────
 // Tab nav

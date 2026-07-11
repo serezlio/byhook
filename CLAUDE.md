@@ -1,7 +1,61 @@
 # BY HOOK — Claude Hafıza Dosyası
-Son güncelleme: 2026-07-03
+Son güncelleme: 2026-07-10
 
 Bu dosya her oturumda ilk okunacak referanstır. Buradaki bilgileri varsay, yeniden keşfetme.
+
+---
+
+## >>> SON DURUM / DEVİR NOTU (2026-07-10) <<<
+
+**KALICI ÇÖZÜM TAMAMLANDI (2026-07-10):**
+- `connection.js` yeniden yazıldı — port 9222 kapalı olsa bile sunucu çökmüyor, 5 sn retry
+- `claude_desktop_config.json` güncellendi — `"node"` yerine `"C:\\Program Files\\nodejs\\node.exe"` tam yol
+- `tv_claude_yeniden_baslat.bat` güncellendi — WindowsApps\Claude_* pattern ile tam yol
+- REPO temizlendi — 46 gereksiz/çakışan bat dosyası ve temp dosya silindi
+- 21 scheduled task aktif, tümü çalışıyor
+
+**TV MCP AÇMA PROSEDÜRÜ (artık sadece 2 adım):**
+1. `tv_debug_kesin.bat` çalıştır (TV debug modunda aç)
+2. Claude'u kapat ve yeniden aç
+
+**İLK İŞ:** `mcp__tradingview__quote_get` ile BIST:ASELS fiyatını al → bağlantıyı doğrula.
+
+**İLK İŞ:** `mcp__tradingview__quote_get` ile BIST:ASELS fiyatını al → bağlantıyı doğrula.
+- Bağlıysa: kullanıcı TradingView üzerinden ne yapılacağını SÖYLEYECEK. Bekle, onun talimatını al.
+- Bağlı DEĞİLSE: aşağıdaki KESIN PROSEDÜR'ü uygula (Chrome ile uğraşma — netstat kullan).
+
+### >>> ASIL KÖK NEDEN (2026-07-06 21:10 — TAM TEŞHİS) <<<
+TV MCP = bir Node stdio sunucusu: `node C:\Users\Administrator\tradingview-mcp-jackson\src\server.js`
+Config: paketli Claude'un `claude_desktop_config.json` içinde `mcpServers.tradingview` — DOĞRU ve kayıtlı.
+Bu sunucu TradingView'a `connection.js` ile CDP üzerinden bağlanır: `localhost:9222`.
+Bağlanamazsa (9222 kapalıysa) sunucu ÇÖKÜP ÇIKAR → hiçbir `mcp__tradingview__*` aracı yüklenmez.
+
+KRİTİK: Bu sunucu Claude UYGULAMASI AÇILIRKEN bir kez başlatılır. "Yeni SOHBET" açmak onu
+yeniden başlatmaz — bu yüzden defalarca yeni sohbet açmak İŞE YARAMADI. Ancak uygulamanın
+TAMAMEN kapatılıp yeniden açılması sunucuyu yeniden başlatır. Ayrıca 9222, uygulama açılırken
+zaten AÇIK olmalı, yoksa sunucu çöker.
+
+### TV MCP BAĞLANMA — KESIN PROSEDÜR (yeni sohbet DEĞİL, uygulamayı yeniden başlat)
+1. `tv_debug_kesin.bat` çalıştır (Dosya Gezgini'nden çift tık). TV'yi öldürüp debug modunda taze açar.
+2. TV tam yüklensin (grafik gelsin), ~15 sn bekle.
+3. Portu DOĞRULA: `port_9222_kontrol.bat` çalıştır → `port_9222_sonuc.txt` içinde
+   `127.0.0.1:9222 ... LISTENING` satırını gör. (Chrome ile kontrol ETME, netstat kullan.)
+4. Claude uygulamasını TAMAMEN KAPAT: sistem tepsisi (saat yanı) → Claude simgesine sağ tık → Quit/Çıkış.
+   Görev Yöneticisi'nde Claude süreçleri bitti mi teyit et.
+5. Claude'u yeniden aç. Açılışta MCP sunucusu spawn olur, 9222 açık olduğu için CDP bağlanır,
+   araçlar yüklenir. Sıra önemli: ÖNCE TV debug (9222) açık, SONRA Claude başlar.
+6. Cowork sohbeti aç → `mcp__tradingview__quote_get` ile ASELS çekip doğrula.
+
+NOT: server.js'te `tv_launch` diye bir araç var (CDP ile TV'yi otomatik başlatır) ama o ancak MCP
+zaten bağlıyken çağrılabilir; ilk bağlantı için yukarıdaki sıra gerekli.
+
+**BEKLEYEN İŞ (kullanıcı onay verince):** THYAO, ASELS, AKBNK, KRDMD, TCELL, EREGL sembollerinin
+TradingView'daki S/R çizimlerini kontrol et ve güncelle. Hangi çizgilerin eksik/eski olduğu
+bilinmiyor — önce TV'de kontrol et. Özellikle THYAO: fiyat 348,50'ye çıktı, eski R2=341 geçildi;
+tahmini yeni seviyeler S2=333,25 | S1=341,00 | R1=352,50 | R2=360,00 → TV'de doğrula ve çiz.
+Güncel seviyeleri byhook_market.js'e ve bu dosyaya yaz, git push.
+
+NOT: Klasör erişimi için ilk `request_cowork_directory` ile C:\Users\Administrator\REPO bağla.
 
 ---
 
@@ -12,6 +66,10 @@ Bu dosya her oturumda ilk okunacak referanstır. Buradaki bilgileri varsay, yeni
 - **Sayılar Türk formatı:** Nokta = binlik ayraç, virgül = ondalık (örn: 1.234,56)
 - **PowerShell çalışmıyor** → Telegram için `mcp__tradingview__ui_evaluate` ile JS fetch kullan
 - **Bash disk dolu** → `mcp__workspace__bash` çalışmıyor, dosya araçları kullan
+- **git güncelleme yapmayı gün içinde söylenmeden yapma** — ekrana engel olur
+- **TV MCP KRİTİK:** TradingView `tv_debug_kesin.bat` ile başlatılmalı (port 9222). Session TV debug modunda açıkken başlamalı, yoksa TV MCP bağlanmaz. Sorun varsa: tv_debug_kesin.bat → port_9222_kontrol.bat ile doğrula → yeni sohbet.
+  - **2026-07-06 KESIN DÜZELTME (v2):** `tv_debug_kesin.bat` yazıldı. Eski batların (tv_debug_kopya/yeni) kusuru: TV zaten açıkken çalıştırılınca Electron var olan instance'ı öne getiriyor, debug flag uygulanmıyordu → port hiç açılmıyordu. Yeni bat ÖNCE `taskkill /F /IM TradingView.exe` ile tüm süreçleri öldürüp 4 sn bekliyor, SONRA `--remote-debugging-port=9222` ile taze açıyor. Sürümden bağımsız (`for /d ..*TradingView*`). Port doğrulama: `port_9222_kontrol.bat` → `port_9222_sonuc.txt` içinde `9222 LISTENING` ara. Chrome ile port kontrolü ÇALIŞMAZ.
+  - **ÖNCEKI (v1):** `tv_debug_kopya.bat` sürümden bağımsız hale getirildi ama kill-first yoktu — o yüzden hâlâ döngüye giriyordu.
 
 ---
 
@@ -49,8 +107,8 @@ C:\Users\Administrator\REPO\
 ```
 
 ### Erişim URL'leri
-- **Yerel (PC açıkken):** `http://192.168.1.101:8080/byhook.html`
-  - WiFi IP: `192.168.1.101` (Wireless LAN adapter Wi-Fi 2)
+- **Yerel (PC açıkken):** `http://192.168.1.102:8080/byhook.html`
+  - WiFi IP: `192.168.1.102` (Wireless LAN adapter Wi-Fi 2)
   - VPN IP: `172.16.0.2` (CloudflareWARP — bu IP ile bağlanma)
 - **GitHub Pages (PC kapalıyken):** `https://serezlio.github.io/byhook/byhook.html`
   - Repo: `https://github.com/serezlio/byhook`
@@ -107,14 +165,16 @@ window.BYHOOK_ROBOTS = [...];
 window.BYHOOK_MARKET = {
   updated: 'ISO_TIMESTAMP',
   hisseler: {
-    ASELS: { fiyat: 360.50, degisim: 1.2 },
-    AKBNK: { fiyat: 77.80, degisim: -0.3 },
-    THYAO: { fiyat: 328.00, degisim: 0.8 },
-    KRDMD: { fiyat: 40.20, degisim: 0.5 },
-    TCELL: { fiyat: 108.10, degisim: -0.1 }
+    ASELS: { fiyat: 402.50, degisim: 0.75, S2: 379.00, S1: 385.00, R1: 397.00, R2: 410.00 },
+    AKBNK: { fiyat:  73.75, degisim: 0.00, S2:  73.00, S1:  75.50, R1:  78.50, R2:  81.85 },
+    THYAO: { fiyat: 348.50, degisim: 4.34, S2: 333.25, S1: 341.00, R1: 352.50, R2: 360.00 },
+    KRDMD: { fiyat:  39.44, degisim: 1.81, S2:  37.50, S1:  39.30, R1:  41.50, R2:  42.80 },
+    TCELL: { fiyat: 107.30, degisim: 0.09, S2: 102.70, S1: 106.50, R1: 109.50, R2: 113.10 },
+    EREGL: { fiyat:  41.28, degisim: 2.94, S2:  40.32, S1:  40.84, R1:  41.22, R2:  42.68 }
   }
 };
 ```
+Not: Her sembol artık S1/S2/R1/R2 seviyelerini de içeriyor. byhook-canli-fiyat görevi bu formatı korumalı.
 
 **byhook_news.js dosya formatı:**
 ```javascript
@@ -128,22 +188,28 @@ window.BYHOOK_NEWS = {
 ```
 
 ### S/R Seviyeleri
+Son güncelleme: 2026-07-10 (TradingView günlük 200 bar analizi ile doğrulandı)
 ```
-ASELS: S2=340,00 | S1=354,00 | R1=367,50 | R2=379,00
-AKBNK: S2=73,00  | S1=75,50  | R1=78,50  | R2=81,85
-THYAO: S2=307,75 | S1=322,00 | R1=333,25 | R2=341,00
-KRDMD: S2=37,50  | S1=39,30  | R1=41,50  | R2=42,80
-TCELL: S2=102,70 | S1=106,50 | R1=109,50 | R2=113,10
+ASELS: S2=355,00 | S1=363,00 | R1=385,00 | R2=400,00
+AKBNK: S2=65,00  | S1=71,00  | R1=75,00  | R2=78,50
+THYAO: S2=327,00 | S1=333,00 | R1=350,00 | R2=355,00
+KRDMD: S2=35,76  | S1=36,50  | R1=39,30  | R2=41,50
+TCELL: S2=104,00 | S1=110,00 | R1=113,00 | R2=116,00
+EREGL: S2=39,20  | S1=39,60  | R1=41,00  | R2=42,00
+ASTOR: S2=300,00 | S1=315,00 | R1=330,00 | R2=336,00
+GARAN: S2=127,00 | S1=130,00 | R1=134,00 | R2=137,00
+VAKBN: S2=30,60  | S1=31,00  | R1=32,20  | R2=33,50
+TUPRS: S2=250,00 | S1=258,00 | R1=270,00 | R2=275,00
 ```
 
 **Genişletilmiş S/R (sr-alarm için):**
 ```
-ASELS: S3-MAJOR=320 | S2=340 | S1=354 | R1=367,50 | R2=379 | R3=389 | R4-MAJOR=410
-THYAO: S4-MAJOR=271,50 | S3=294 | S2=307,75 | S1=322 | R1=333,25 | R2=341 | R3-MAJOR=352,50
+ASELS: S3-MAJOR=360 | S2=379 | S1=385 | R1=397 | R2=410 | R3-MAJOR=425
+THYAO: S2=333,25 | S1=341,00 | R1=352,50 | R2=360,00 | R3-MAJOR=370  ← GÜNCELLENDİ
 AKBNK: S4-MAJOR=65,60 | S3=69,25 | S2=73 | S1=75,50 | R1=78,50 | R2=81,85 | R3-MAJOR=91
 KRDMD: S4-MAJOR=34 | S3=36,50 | S2=37,50 | S1=39,30 | R1=41,50 | R2=42,80 | R3=44,50 | R4-MAJOR=47
 TCELL: S3-MAJOR=100,80 | S2=102,70 | S1=106,50 | R1=109,50 | R2=113,10 | R3=116,30 | R4-MAJOR=123,40
-EREGL: S4-MAJOR=34 | S3=36 | S2=38 | S1=39,66 | R1=42 | R2=43,72 | R3=45 | R4-MAJOR=47
+EREGL: S4-MAJOR=38,00 | S3=39,66 | S2=40,32 | S1=40,84 | R1=41,22 | R2=42,68 | R3=43,72 | R4-MAJOR=45,00
 ```
 
 ---
@@ -171,18 +237,22 @@ EREGL: S4-MAJOR=34 | S3=36 | S2=38 | S1=39,66 | R1=42 | R2=43,72 | R3=45 | R4-MA
 - SuperTrend yön değiştirdiyse (flip) VE toplam puan >= 6 ise sinyal
 - TF: 15 dakika
 
-### Puan Sistemi (CERN-1 ve CERN-2)
+### Puan Sistemi (CERN-1 ve CERN-2) — Scalp Optimize
 | Kriter | Puan |
 |--------|------|
 | Ana sistem uyumlu | +2 |
 | Çapraz sistem uyumlu | +2 |
-| Vadeli (XU030DM2I) uyumlu | +2 |
 | XU100 uyumlu | +1 |
 | EMA yönü | +1 |
-| S/R mesafe > %1,5 | +1 |
 | Hacim ortalamanın üstünde | +1 |
 
-Eşik: **>= 6 = GİRİŞ İZNİ VAR**
+Eşik: **>= 3 = GİRİŞ İZNİ VAR** (scalp — önceki eşik 6 idi)
+
+**Teknik notlar (2026-07-03):**
+- Tüm Telegram çağrıları: `.then()` kullan, `await` değil
+- Sembol değiştirme: `pane_set_symbol(index=0)` kullan, `chart_set_symbol` değil (crash yapar)
+- EMA1/EMA2/Haz değerleri: "VIOP S4 — SMC Scalp" indikatöründen okunur
+- F (anlık fiyat): `quote_get()` last/close değeri
 
 ### Simülasyon SL/TP Kuralı
 - LONG: SL = S1, TP = R1
@@ -417,11 +487,20 @@ git push origin main
 | Bash / mcp__workspace__bash | ÇALIŞMIYOR (disk dolu) |
 | PowerShell | ÇALIŞMIYOR |
 | mcp__tradingview__ui_evaluate | Telegram için JS fetch kullan |
+| mcp__claude-in-chrome__javascript_tool | Telegram için ALTERNATIF — TV MCP'den bağımsız çalışır |
 | Chrome (computer-use) | Sadece READ tier — tıklama yok |
 | CMD / Terminal (computer-use) | CLICK tier — yazma yok, .bat dosyaları kullan |
 | Dosya Gezgini (computer-use) | FULL tier — çalışıyor |
 | Read tool (Claude\Scheduled uppercase) | ÇALIŞIYOR |
 | Read tool (claude\Scheduled lowercase — 3 byhook görevi) | ERIŞILEMIYOR — promptlar yukarıda |
+
+**Chrome MCP ile Telegram gönderme (TV MCP yokken):**
+```javascript
+// 1. tabs_context_mcp(createIfEmpty:true) ile tab al
+// 2. Tab chrome:// ise navigate("https://www.google.com")
+// 3. javascript_tool ile:
+fetch("https://api.telegram.org/bot[TOKEN]/sendMessage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:"[CHAT_ID]",text:"MESAJ"})}).then(r=>r.json()).then(d=>d.ok)
+```
 
 ---
 
@@ -462,14 +541,22 @@ git push origin main
 8. Robot simülasyon takip sistemi (SL/TP otomatik kontrol)
 9. CERN-1/2 + S4 + VIOP-FLIP → sinyal gelince byhook_robots.js'e otomatik kayıt
 10. Tüm task promptları CLAUDE.md'ye kaydedildi (Task #19)
+11. GitHub repo private yapıldı + git'ten token temizlendi (Task #20)
+12. PC güvenlik kontrolü tamamlandı (Task #21)
+13. byhook.html — iOS refresh butonu eklendi (touch-action, touchstart, 5dk auto-refresh)
+14. byhook_market.js — S/R seviyeleri her sembole eklendi, EREGL 6. sembol olarak dahil edildi
+15. TradingView MCP bağlantı yöntemi belirlendi: tv_debug_kopya.bat (port 9222)
+16. tv_debug_kopya.bat sürümden bağımsız hale getirildi (2026-07-06) — sabit yol yerine `for /d ..*TradingView*` ile otomatik sürüm bulma; MCP bağlantı sorunu çözüldü
+17. TV MCP KESIN ÇÖZÜM (2026-07-06 18:45) — kök neden bulundu: TV zaten açıkken debug flag uygulanmıyordu. `tv_debug_kesin.bat` (kill-first) + `port_9222_kontrol.bat` (netstat doğrulama) yazıldı. Port 9222 LISTENING olarak doğrulandı. Bir daha "kaç sohbet açacağım" döngüsü yok.
 
 ---
 
 ## DEVAM EDEN / BEKLEYENLER
 
-- [ ] **Task #20:** GitHub repo PRIVATE yap (serezlio/byhook → Settings → Danger Zone)
-      → Telegram token public görünüyor: BOTTOKEN_GIZLI
-      → Chrome MCP ile: github.com/serezlio/byhook/settings → Change repository visibility → Private
-- [ ] **Task #21:** PC güvenlik kontrolü (sistemleri bozmadan): firewall, açık portlar, RDP, Windows Defender
+- [ ] **THYAO S/R çizimleri:** TradingView'da güncellenmeli. Fiyat 348,50'de, eski seviyeler geçildi.
+      Yeni tahmini seviyeler: S2=333,25 | S1=341,00 | R1=352,50 | R2=360,00
+      → Bir sonraki sessionda TV MCP ile doğrula ve çizgileri güncelle
 - [ ] **Task #9:** CERN-2 / VIOP Pro strateji doğrulama ve TradingView testi
 - [ ] byhook-robot-takip görevi ilk sinyalde test edilmeli
+- [ ] sr-alarm SKILL.md — THYAO seviyeleri güncellenmeli (eski R2=341 geçildi)
+- [ ] **viop-flip-tarayici KIRIK (2026-07-07):** SKILL.md "VIOP Sinyal Pro" göstergesini bekliyor ama chart'ta yok (mevcut: CERN-1/CERN-3/S4/S3/By Hook MTF Sinyal+Alert). Görev çalıştı ama veri okuyamadı, Telegram/state güncellemesi YAPILMADI. Kullanıcıya sor: gösterge mi eklenecek yoksa SKILL.md mevcut göstergelere göre mi yeniden yazılacak?

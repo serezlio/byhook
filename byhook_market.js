@@ -1,13 +1,13 @@
 // Piyasa verileri — Claude tarafindan guncellenir.
-// Son guncelleme: 2026-07-03 09:20
+// Son guncelleme: 2026-07-11 09:47
 window.BYHOOK_MARKET = {
-  updated: '2026-07-03T09:20:00',
+  updated: '2026-07-11T09:47:00',
   hisseler: {
-    'ASELS': { fiyat: 384.75, degisim: 0,    S2: 340.00, S1: 354.00, R1: 367.50, R2: 379.00 },
-    'AKBNK': { fiyat:  77.95, degisim: 0,    S2:  73.00, S1:  75.50, R1:  78.50, R2:  81.85 },
-    'THYAO': { fiyat: 333.25, degisim: 0,    S2: 307.75, S1: 322.00, R1: 333.25, R2: 341.00 },
-    'KRDMD': { fiyat:  39.14, degisim: 0,    S2:  37.50, S1:  39.30, R1:  41.50, R2:  42.80 },
-    'TCELL': { fiyat: 108.40, degisim: 0,    S2: 102.70, S1: 106.50, R1: 109.50, R2: 113.10 },
-    'EREGL': { fiyat:  null,  degisim: null, S2:  null,  S1:  null,  R1:  null,  R2:  null  }
+    'ASELS': { fiyat: 370.00, degisim:  3.14, S2: 355.00, S1: 363.00, R1: 385.00, R2: 400.00 },
+    'AKBNK': { fiyat:  68.75, degisim: -2.07, S2:  65.00, S1:  71.00, R1:  75.00, R2:  78.50 },
+    'THYAO': { fiyat: 344.50, degisim:  1.85, S2: 327.00, S1: 333.00, R1: 350.00, R2: 355.00 },
+    'KRDMD': { fiyat:  37.78, degisim:  3.45, S2:  35.76, S1:  36.50, R1:  39.30, R2:  41.50 },
+    'TCELL': { fiyat: 107.00, degisim:  2.00, S2: 104.00, S1: 110.00, R1: 113.00, R2: 116.00 },
+    'EREGL': { fiyat:  40.40, degisim:  0.85, S2:  39.20, S1:  39.60, R1:  41.00, R2:  42.00 }
   }
 };
